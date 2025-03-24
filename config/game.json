@@ -2,6 +2,7 @@
 	{
 		"name": "Дом",
 		"description": "Мой дом",
+		"is_open": true,
 		"zones": [
 			{
 				"name": "Кухня",
@@ -37,6 +38,7 @@
 	{
 		"name": "Сад",
 		"description": "Заросший сад с высокой травой",
+		"is_open": true,
 		"zones": [
 			{
 				"name": "Теплица",

@@ -11,6 +11,7 @@ import (
 type tempLocation struct {
 	Name        string               `json:"name"`
 	Description string               `json:"description"`
+	IsOpen      bool                 `json:"is_open"`
 	Zones       []*location.Location `json:"zones"`
 	Locations   []*location.Location `json:"locations"` // Здесь пока просто имена локаций
 }
@@ -40,6 +41,7 @@ func LoadLocations(filename, rootName string) (*location.Location, error) {
 			Name:        tempLoc.Name,
 			Description: tempLoc.Description,
 			Zones:       tempLoc.Zones,
+			IsOpen:      tempLoc.IsOpen,
 		}
 		locationMap[tempLoc.Name] = loc
 	}

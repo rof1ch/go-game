@@ -42,3 +42,24 @@ func (g *Game) GetPlayerInfo() {
 
 	fmt.Println(output)
 }
+
+func (g *Game) GoToLocation(locationName string) {
+
+	for _, location := range g.myPlayer.CurrentLocation.Locations {
+		fmt.Println(location.IsOpen)
+		if location.Name == locationName {
+			err := g.myPlayer.GoToLocation(location)
+			if err != nil {
+				fmt.Printf("%v\n", err)
+			}
+			return
+		}
+	}
+	for _, zone := range g.myPlayer.CurrentLocation.Zones {
+		if zone.Name == locationName {
+			g.myPlayer.GoToLocation(zone)
+			return
+		}
+	}
+	fmt.Println("Нет такой локации")
+}

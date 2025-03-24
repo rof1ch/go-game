@@ -104,7 +104,6 @@ func (l *Location) GetLocationDraw() string {
 }
 
 func (l *Location) getZonesName() string {
-	fmt.Println(l)
 	var zones []string
 	for _, zone := range l.Zones {
 		zones = append(zones, zone.Name)

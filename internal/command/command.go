@@ -2,6 +2,7 @@ package command
 
 import (
 	"fmt"
+	"game/internal/colors"
 	"game/internal/game"
 	"strings"
 )
@@ -27,8 +28,8 @@ func InitCommand(game *game.Game) *Command {
 }
 
 func (c *Command) RunCommand(command string) bool {
-	commandSlice := strings.Split(command, " ")
-	switch commandSlice[0] {
+
+	switch command {
 	case "help":
 		output := fmt.Sprintln(Magenta + `
         +----------------------------------------------------------------+` + Reset + `
@@ -55,8 +56,13 @@ func (c *Command) RunCommand(command string) bool {
 		c.game.GetCurrentLocation()
 	case "inventory":
 		c.game.GetInventory()
-    case "me":
-        c.game.GetPlayerInfo()
+	case "me":
+		c.game.GetPlayerInfo()
+	case "go":
+		var locationName string
+		fmt.Print(colors.GetCyanText("Введите название локации: "))
+		fmt.Scan(&locationName)
+		c.game.GoToLocation(locationName)
 	default:
 		fmt.Println("Комманда неизвестна")
 	}
