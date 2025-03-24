@@ -2,8 +2,10 @@ package game
 
 import (
 	"fmt"
-	"game/internal/location"
+	"game/internal/colors"
+	"game/internal/config"
 	"game/internal/player"
+	"log"
 )
 
 type Game struct {
@@ -12,12 +14,11 @@ type Game struct {
 
 func InitGame() *Game {
 	var name string
-	fmt.Print("Введите имя игрока: ")
+	fmt.Print(colors.GetCyanText("Введите имя игрока: "))
 	fmt.Scan(&name)
-	currentLocation := location.Location{
-		Name:        "Дом",
-		Description: "Мой дом",
-		IsOpen:      true,
+	currentLocation, err := config.LoadLocations("config/game.json", "Дом")
+	if err != nil {
+		log.Fatal(err)
 	}
 	myPlayer := player.NewPlayer(name, currentLocation)
 	return &Game{myPlayer: myPlayer}
@@ -29,4 +30,15 @@ func (g *Game) GetCurrentLocation() {
 
 func (g *Game) GetInventory() {
 	fmt.Println(g.myPlayer.Inventory.GetItems())
+}
+func (g *Game) GetPlayerInfo() {
+	output := fmt.Sprintf(`
+        +----------------------------+
+        | Имя: %s
+        | Здоровье: %d
+        | Дамаг: %d
+        +----------------------------+
+    `, g.myPlayer.Name, g.myPlayer.Health, g.myPlayer.Damage)
+
+	fmt.Println(output)
 }

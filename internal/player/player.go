@@ -10,14 +10,14 @@ import (
 
 type Player struct {
 	Name            string
-	CurrentLocation location.Location
+	CurrentLocation *location.Location
 	Inventory       Inventory
 	Health          int
 	Damage          int
 	Weapon          item.Item
 }
 
-func NewPlayer(name string, location location.Location) *Player {
+func NewPlayer(name string, location *location.Location) *Player {
 	inventory := Inventory{
 		Items: make(map[string]item.Item),
 	}
@@ -62,7 +62,7 @@ func (p *Player) GoToLocation(locat *location.Location) error {
 	if !locat.IsOpen {
 		for _, item := range p.Inventory.Items {
 			if item.GetType() == "key" && item.GetName() == locat.Name {
-				err := item.Use(*locat) // вызываем Use
+				err := item.Use(locat.Name) // вызываем Use
 				if err != nil {
 					return err // если ошибка — возвращаем её сразу
 				}
@@ -78,6 +78,6 @@ func (p *Player) GoToLocation(locat *location.Location) error {
 	}
 
 	// Переход в новую локацию
-	p.CurrentLocation = *locat
+	p.CurrentLocation = locat
 	return nil
 }

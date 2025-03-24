@@ -40,6 +40,7 @@ func (c *Command) RunCommand(command string) bool {
         | ` + getCommand("inventory") + getText("Открыть инвентарь") + `                                  |
         | ` + getCommand("talk <Название NPC>") + getText("Поговорить с NPC") + `                         |
         | ` + getCommand("location") + getText("Выведет информацию о текущей локации") + `                |
+        | ` + getCommand("me") + getText("Выведет информацию о игроке") + `                               |
         ` + Magenta + `+----------------------------------------------------------------+` + Reset + `
         `)
 		output = strings.ReplaceAll(output, "|", Magenta+"|"+Reset)
@@ -54,6 +55,8 @@ func (c *Command) RunCommand(command string) bool {
 		c.game.GetCurrentLocation()
 	case "inventory":
 		c.game.GetInventory()
+    case "me":
+        c.game.GetPlayerInfo()
 	default:
 		fmt.Println("Комманда неизвестна")
 	}

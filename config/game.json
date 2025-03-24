@@ -1,0 +1,133 @@
+[
+	{
+		"name": "Дом",
+		"description": "Мой дом",
+		"zones": [
+			{
+				"name": "Кухня",
+				"items": [
+					{
+						"type": "key",
+						"name": "Сад"
+					},
+					{
+						"type": "health_potion",
+						"name": "Зелье здоровья",
+						"health": 20
+					}
+				]
+			},
+			{
+				"name": "Гостиная",
+				"items": [
+					{
+						"type": "weapon",
+						"name": "Нож",
+						"damage": 10
+					}
+				]
+			}
+		],
+		"locations": [
+			{
+				"name": "Сад"
+			}
+		]
+	},
+	{
+		"name": "Сад",
+		"description": "Заросший сад с высокой травой",
+		"zones": [
+			{
+				"name": "Теплица",
+				"items": [
+					{
+						"type": "damage_potion",
+						"name": "Ядовитый гриб",
+						"damage": 5
+					}
+				]
+			}
+		],
+		"locations": [
+			{
+				"name": "Лес"
+			},
+			{
+				"name": "Дом"
+			}
+		]
+	},
+	{
+		"name": "Лес",
+		"description": "Темный лес, полный опасностей",
+		"zones": [
+			{
+				"name": "Лагерь охотников",
+				"items": [
+					{
+						"type": "weapon",
+						"name": "Лук",
+						"damage": 15
+					},
+					{
+						"type": "key",
+						"name": "Заброшенный дом"
+					}
+				]
+			}
+		],
+		"locations": [
+			{
+				"name": "Сад"
+			},
+			{
+				"name": "Пещера"
+			}
+		]
+	},
+	{
+		"name": "Пещера",
+		"description": "Старая пещера, в которой слышатся странные звуки",
+		"zones": [
+			{
+				"name": "Глубины пещеры",
+				"items": [
+					{
+						"type": "damage_potion",
+						"name": "Зелье силы",
+						"damage": 30
+					}
+				]
+			}
+		],
+		"locations": [
+			{
+				"name": "Лес"
+			},
+			{
+				"name": "Подземный храм"
+			}
+		]
+	},
+	{
+		"name": "Подземный храм",
+		"description": "Древний храм, скрытый в глубинах земли",
+		"zones": [
+			{
+				"name": "Алтарь",
+				"items": [
+					{
+						"type": "artifact",
+						"name": "Кристалл силы"
+					}
+				]
+			}
+		],
+		"locations": [
+			{
+				"name": "Пещера"
+			}
+		]
+	}
+]
