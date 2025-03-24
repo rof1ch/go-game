@@ -2,6 +2,7 @@ package player
 
 import (
 	"errors"
+	"fmt"
 	"game/internal/item"
 	"game/internal/location"
 	"game/internal/npc"
@@ -16,8 +17,32 @@ type Player struct {
 	Weapon          item.Item
 }
 
+func NewPlayer(name string, location location.Location) *Player {
+	inventory := Inventory{
+		Items: make(map[string]item.Item),
+	}
+	return &Player{
+		Name:            name,
+		Inventory:       inventory,
+		CurrentLocation: location,
+		Health:          100,
+		Damage:          9,
+	}
+}
+
 type Inventory struct {
 	Items map[string]item.Item
+}
+
+func (i *Inventory) GetItems() string {
+	if len(i.Items) == 0 {
+		return "Ваш инвентарь пуст"
+	}
+	var output string
+	for key, item := range i.Items {
+		output += fmt.Sprintf("%s - %s\n", key, item.GetName())
+	}
+	return output
 }
 
 func (p *Player) TakeItem(item item.Item) {

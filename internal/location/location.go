@@ -2,6 +2,7 @@ package location
 
 import (
 	"fmt"
+	"game/internal/npc"
 	"strings"
 )
 
@@ -11,10 +12,8 @@ type Location struct {
 	IsOpen        bool
 	Zones         []Location
 	NextLocations []Location
-	Chest         interface{}
+	Monster       npc.Monster
 }
-
-//TODO Написать стрктуру chest которая будет хранить также items и иметь функционал открыть, взять один, взять все, закрыть 
 
 func NewLocation(name, description string, isOpen bool, zones []Location, locations []Location) *Location {
 	return &Location{

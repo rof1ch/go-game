@@ -2,24 +2,24 @@ package main
 
 import (
 	"fmt"
-	"game/internal/location"
-	"game/internal/player"
+	"game/internal/command"
+	"game/internal/game"
 )
 
 func main() {
-	chest := location.NewLocation("Сундук", "", true, nil, nil)
-	location2 := location.NewLocation("Зал славы", "Зал славы", true, []location.Location{
-		*chest,
-	}, nil)
-	location1 := location.NewLocation("Зал славы", "Зал славы", true, []location.Location{
-		*chest,
-	}, []location.Location{
-		*location2,
-	})
+    app := game.InitGame()
+    commands := command.InitCommand(app)
+	for {
+		var inputCommand string
+		fmt.Print("Введите команду: ")
+		fmt.Scan(&inputCommand)
 
-	player1 := player.Player{
-		CurrentLocation: *location1,
+		if inputCommand != "" {
+			isClose := commands.RunCommand(inputCommand)
+			if isClose {
+				break
+			}
+		}
 	}
 
-	fmt.Println(player1.CurrentLocation.GetLocationDraw())
 }
