@@ -37,9 +37,9 @@ func (c *Command) RunCommand(command string) bool {
         +----------------------------------------------------------------+` + Reset + `
         | ` + getCommand("help") + getText("Вызов этого меню") + `                                        |
         | ` + getCommand("quit / exit") + getText("Закрыть меню") + `                                     |
-        | ` + getCommand("go <Название локации либо зоны>") + getText("Перейти в какую-либо локацию") + ` |
-        | ` + getCommand("atack <Навазние монстра>") + getText("Атаковать монстра ") + `                  |
-        | ` + getCommand("take <Навзание предмета>") + getText("Подобрать предмет") + `                   |
+        | ` + getCommand("go") + getText("Перейти в какую-либо локацию") + ` |
+        | ` + getCommand("atack") + getText("Атаковать монстра ") + `                  |
+        | ` + getCommand("take") + getText("Подобрать предмет") + `                   |
         | ` + getCommand("inventory") + getText("Открыть инвентарь") + `                                  |
         | ` + getCommand("talk <Название NPC>") + getText("Поговорить с NPC") + `                         |
         | ` + getCommand("location") + getText("Выведет информацию о текущей локации") + `                |
@@ -62,14 +62,19 @@ func (c *Command) RunCommand(command string) bool {
 		c.game.GetPlayerInfo()
 	case "go":
 		var locationName string
+		fmt.Print(colors.GetCyanText("Введите название локации/зоны: "))
 		fmt.Scan(&locationName)
 		c.game.GoToLocation(locationName)
 	case "take":
 		fmt.Printf(colors.GetCyanText("Введите название предмета: "))
 		itemName, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		c.game.TakeItem(itemName)
+	case "use":
+		fmt.Printf(colors.GetCyanText("Введите название предмета: "))
+		itemName, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		c.game.UseItem(itemName)
 	default:
-		fmt.Println("Комманда неизвестна")
+		fmt.Println(colors.GetRedText("Комманда неизвестна"))
 	}
 
 	return false

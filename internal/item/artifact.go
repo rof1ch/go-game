@@ -4,7 +4,7 @@ type Artifact struct {
 	DefaultItem
 }
 
-func (a *Artifact) Use(_ string) error {
+func (a *Artifact) Use(locationName string, player player) error {
 	return nil
 }
 
@@ -14,4 +14,8 @@ func (a *Artifact) GetName() string {
 
 func (a *Artifact) GetType() string {
 	return a.Type
+}
+
+func (a *Artifact) GetInfo() string {
+	return "Просто редкий предмет"
 }

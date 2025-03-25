@@ -39,8 +39,9 @@ func (g *Game) GetPlayerInfo() {
         | Имя: %s
         | Здоровье: %d
         | Дамаг: %d
+        | Оружие: %s
         +----------------------------+
-    `, g.myPlayer.Name, g.myPlayer.Health, g.myPlayer.Damage)
+    `, g.myPlayer.Name, g.myPlayer.Health, g.myPlayer.Damage, g.myPlayer.Weapon.Name)
 
 	fmt.Println(output)
 }
@@ -73,4 +74,15 @@ func (g *Game) TakeItem(itemName string) {
 	}
 	g.myPlayer.TakeItem(item)
 	delete(g.myPlayer.CurrentLocation.Items, itemName)
+}
+
+func (g *Game) UseItem(itemName string) {
+	itemName = strings.TrimSpace(itemName)
+	item, ok := g.myPlayer.Inventory.Items[itemName]
+	if !ok {
+		fmt.Println("В инвентаре нет данного предмета")
+		return
+	}
+
+	item.Use("", g.myPlayer)
 }

@@ -15,7 +15,8 @@ var (
 type Item interface {
 	GetName() string
 	GetType() string
-	Use(locationName string) error
+	GetInfo() string
+	Use(locationName string, player player) error
 }
 
 type DefaultItem struct {
@@ -24,9 +25,11 @@ type DefaultItem struct {
 	Type        string
 }
 
-type player struct {
-	Health int
-	Damage int
+type player interface {
+	UpdateHealth(health int)
+	UpdateDamage(damage int)
+	UseWeapon(item *Weapon)
+	DeleteInventoryItem(itemName string)
 }
 
 func UnmarshalItem(data json.RawMessage) (Item, error) {

@@ -15,7 +15,7 @@ type Player struct {
 	Inventory       Inventory
 	Health          int
 	Damage          int
-	Weapon          item.Item
+	Weapon          *item.Weapon
 }
 
 func NewPlayer(name string, location *location.Location) *Player {
@@ -40,8 +40,8 @@ func (i *Inventory) GetItems() string {
 		return "Ваш инвентарь пуст"
 	}
 	var output string
-	for key, item := range i.Items {
-		output += fmt.Sprintf("%s - %s\n", key, item.GetName())
+	for _, item := range i.Items {
+		output += fmt.Sprintf("%s - %s\n", item.GetName(), item.GetInfo())
 	}
 	return output
 }
@@ -51,11 +51,15 @@ func (p *Player) TakeItem(item item.Item) {
 }
 
 func (p *Player) Attack(monster *npc.Monster) {
-	monster.Health -= p.Damage
-	p.Health -= monster.Damage
+	if p.Weapon != nil {
+		monster.Health -= p.Damage + p.Weapon.Damage
+	} else {
+		monster.Health -= p.Damage
+	}
+	p.UpdateHealth(-monster.Damage)
 }
 
-func (p *Player) UseWeapon(weapon item.Item) {
+func (p *Player) UseWeapon(weapon *item.Weapon) {
 	p.Weapon = weapon
 }
 
@@ -63,7 +67,7 @@ func (p *Player) GoToLocation(locat *location.Location) error {
 	if !locat.IsOpen {
 		for _, item := range p.Inventory.Items {
 			if item.GetType() == "key" {
-				err := item.Use(locat.Name) // вызываем Use
+				err := item.Use(locat.Name, nil) // вызываем Use
 				if err != nil {
 					return err // если ошибка — возвращаем её сразу
 				}
@@ -83,4 +87,16 @@ func (p *Player) GoToLocation(locat *location.Location) error {
 	p.CurrentLocation = locat
 	fmt.Printf("Вы перешли в локацию %s\n", locat.Name)
 	return nil
+}
+
+func (p *Player) UpdateHealth(health int) {
+	p.Health += health
+}
+
+func (p *Player) UpdateDamage(damage int) {
+	p.Damage += damage
+}
+
+func (p *Player) DeleteInventoryItem(itemName string) {
+	delete(p.Inventory.Items, itemName)
 }

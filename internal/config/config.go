@@ -55,8 +55,9 @@ func LoadLocations(filename, rootName string) (*location.Location, error) {
 	for _, tempLoc := range tempLocations {
 		loc := locationMap[tempLoc.Name]
 		for _, zone := range tempLoc.Zones {
-            zone.Locations = make(map[string]*location.Location)
+			zone.Locations = make(map[string]*location.Location)
 			zone.Locations[loc.Name] = loc
+			zone.IsOpen = true
 		}
 		loc.Locations = make(map[string]*location.Location)
 		for _, linkedName := range tempLoc.Locations {
