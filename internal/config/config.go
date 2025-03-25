@@ -36,11 +36,16 @@ func LoadLocations(filename, rootName string) (*location.Location, error) {
 	locationMap := make(map[string]*location.Location)
 
 	// Создаем объекты Location без ссылок
+
 	for _, tempLoc := range tempLocations {
+		zones := make(map[string]*location.Location)
+		for _, zone := range tempLoc.Zones {
+			zones[zone.Name] = zone
+		}
 		loc := &location.Location{
 			Name:        tempLoc.Name,
 			Description: tempLoc.Description,
-			Zones:       tempLoc.Zones,
+			Zones:       zones,
 			IsOpen:      tempLoc.IsOpen,
 		}
 		locationMap[tempLoc.Name] = loc
@@ -49,9 +54,14 @@ func LoadLocations(filename, rootName string) (*location.Location, error) {
 	// Проставляем ссылки на связанные локации
 	for _, tempLoc := range tempLocations {
 		loc := locationMap[tempLoc.Name]
+		for _, zone := range tempLoc.Zones {
+            zone.Locations = make(map[string]*location.Location)
+			zone.Locations[loc.Name] = loc
+		}
+		loc.Locations = make(map[string]*location.Location)
 		for _, linkedName := range tempLoc.Locations {
 			if linkedLoc, exists := locationMap[linkedName.Name]; exists {
-				loc.Locations = append(loc.Locations, linkedLoc)
+				loc.Locations[linkedLoc.Name] = linkedLoc
 			} else {
 				fmt.Printf("⚠️ Локация \"%s\" ссылается на несуществующую \"%s\"\n", tempLoc.Name, linkedName.Name)
 			}

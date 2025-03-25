@@ -6,6 +6,7 @@ import (
 	"game/internal/item"
 	"game/internal/location"
 	"game/internal/npc"
+	"strings"
 )
 
 type Player struct {
@@ -61,13 +62,14 @@ func (p *Player) UseWeapon(weapon item.Item) {
 func (p *Player) GoToLocation(locat *location.Location) error {
 	if !locat.IsOpen {
 		for _, item := range p.Inventory.Items {
-			if item.GetType() == "key" && item.GetName() == locat.Name {
+			if item.GetType() == "key" {
 				err := item.Use(locat.Name) // вызываем Use
 				if err != nil {
 					return err // если ошибка — возвращаем её сразу
 				}
 				locat.IsOpen = true // Открываем локацию
-				break               // выходим из цикла, так как ключ найден и использован
+				delete(p.Inventory.Items, strings.TrimSpace(item.GetName()))
+				break // выходим из цикла, так как ключ найден и использован
 			}
 		}
 
@@ -79,5 +81,6 @@ func (p *Player) GoToLocation(locat *location.Location) error {
 
 	// Переход в новую локацию
 	p.CurrentLocation = locat
+	fmt.Printf("Вы перешли в локацию %s\n", locat.Name)
 	return nil
 }

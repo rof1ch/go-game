@@ -9,13 +9,13 @@ import (
 )
 
 type Location struct {
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	IsOpen      bool        `json:"is_open"`
-	Zones       []*Location `json:"zones"`
-	Locations   []*Location `json:"-"`
+	Name        string               `json:"name"`
+	Description string               `json:"description"`
+	IsOpen      bool                 `json:"is_open"`
+	Zones       map[string]*Location `json:"zones"`
+	Locations   map[string]*Location `json:"-"`
 	Monster     npc.Monster
-	Items       []item.Item `json:"items"`
+	Items       map[string]item.Item `json:"items"`
 }
 
 func (l *Location) UnmarshalJSON(data []byte) error {
@@ -36,18 +36,23 @@ func (l *Location) UnmarshalJSON(data []byte) error {
 	l.Name = temp.Name
 	l.Description = temp.Description
 	l.IsOpen = temp.IsOpen
-	l.Zones = temp.Zones
-	l.Locations = temp.Locations
+	for _, zone := range temp.Zones {
+		l.Zones[zone.Name] = zone
+
+	}
+	for _, location := range temp.Locations {
+		l.Locations[location.Name] = location
+	}
 	l.Monster = temp.Monster
 
 	// Если items пуст, сразу назначаем пустой слайс
 	if len(temp.Items) == 0 {
-		l.Items = []item.Item{}
+		l.Items = map[string]item.Item{}
 		return nil
 	}
 
 	// Десериализация Items
-	var items []item.Item
+	items := make(map[string]item.Item)
 	// Парсим каждый элемент в Items через кастомную функцию
 	if err := json.Unmarshal(temp.Items, &items); err != nil {
 		// Пробуем по одному элементу в массиве
@@ -61,7 +66,9 @@ func (l *Location) UnmarshalJSON(data []byte) error {
 			if err != nil {
 				return fmt.Errorf("ошибка при десериализации предмета: %w", err)
 			}
-			items = append(items, i)
+			if i != nil {
+				items[strings.TrimSpace(i.GetName())] = i
+			}
 		}
 	}
 
@@ -69,7 +76,7 @@ func (l *Location) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func NewLocation(name, description string, isOpen bool, zones []*Location, locations []*Location) *Location {
+func NewLocation(name, description string, isOpen bool, zones map[string]*Location, locations map[string]*Location) *Location {
 	return &Location{
 		Name:        name,
 		Description: description,
@@ -122,7 +129,9 @@ func (l *Location) getLocationName() string {
 func (l *Location) getLocationItems() string {
 	var items []string
 	for _, item := range l.Items {
-		items = append(items, item.GetName())
+		if item != nil {
+			items = append(items, item.GetName())
+		}
 	}
 
 	return strings.Join(items, ", ")

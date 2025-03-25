@@ -2,7 +2,7 @@ package item
 
 type Key struct {
 	DefaultItem
-	LocationName string
+	LocationName string `json:"location_name"`
 }
 
 func (k *Key) Use(locationName string) error {
@@ -13,7 +13,7 @@ func (k *Key) Use(locationName string) error {
 }
 
 func (k *Key) GetName() string {
-	return k.LocationName
+	return k.Name
 }
 
 func (k *Key) GetType() string {

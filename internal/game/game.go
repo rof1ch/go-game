@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"game/internal/colors"
 	"game/internal/config"
+	"game/internal/location"
 	"game/internal/player"
 	"log"
+	"strings"
 )
 
 type Game struct {
@@ -44,22 +46,31 @@ func (g *Game) GetPlayerInfo() {
 }
 
 func (g *Game) GoToLocation(locationName string) {
+	var location *location.Location
 
-	for _, location := range g.myPlayer.CurrentLocation.Locations {
-		fmt.Println(location.IsOpen)
-		if location.Name == locationName {
-			err := g.myPlayer.GoToLocation(location)
-			if err != nil {
-				fmt.Printf("%v\n", err)
-			}
+	location, ok := g.myPlayer.CurrentLocation.Locations[locationName]
+	if !ok {
+		location, ok = g.myPlayer.CurrentLocation.Zones[locationName]
+		if !ok {
+			fmt.Println("Нет такой локации")
 			return
 		}
 	}
-	for _, zone := range g.myPlayer.CurrentLocation.Zones {
-		if zone.Name == locationName {
-			g.myPlayer.GoToLocation(zone)
-			return
-		}
+
+	err := g.myPlayer.GoToLocation(location)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		return
 	}
-	fmt.Println("Нет такой локации")
+}
+
+func (g *Game) TakeItem(itemName string) {
+	itemName = strings.TrimSpace(itemName)
+	item, ok := g.myPlayer.CurrentLocation.Items[itemName]
+	if !ok {
+		fmt.Println("Такого предмета нет в данной локации")
+		return
+	}
+	g.myPlayer.TakeItem(item)
+	delete(g.myPlayer.CurrentLocation.Items, itemName)
 }

@@ -6,10 +6,12 @@
 		"zones": [
 			{
 				"name": "Кухня",
+				"is_open": true,
 				"items": [
 					{
 						"type": "key",
-						"name": "Сад"
+						"name": "Ключ от сада",
+						"location_name": "Сад"
 					},
 					{
 						"type": "health_potion",
@@ -38,7 +40,7 @@
 	{
 		"name": "Сад",
 		"description": "Заросший сад с высокой травой",
-		"is_open": true,
+		"is_open": false,
 		"zones": [
 			{
 				"name": "Теплица",

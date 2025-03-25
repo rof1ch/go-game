@@ -1,9 +1,11 @@
 package command
 
 import (
+	"bufio"
 	"fmt"
 	"game/internal/colors"
 	"game/internal/game"
+	"os"
 	"strings"
 )
 
@@ -60,9 +62,12 @@ func (c *Command) RunCommand(command string) bool {
 		c.game.GetPlayerInfo()
 	case "go":
 		var locationName string
-		fmt.Print(colors.GetCyanText("Введите название локации: "))
 		fmt.Scan(&locationName)
 		c.game.GoToLocation(locationName)
+	case "take":
+		fmt.Printf(colors.GetCyanText("Введите название предмета: "))
+		itemName, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		c.game.TakeItem(itemName)
 	default:
 		fmt.Println("Комманда неизвестна")
 	}
