@@ -34,6 +34,12 @@ func (g *Game) GetInventory() {
 	fmt.Println(g.myPlayer.Inventory.GetItems())
 }
 func (g *Game) GetPlayerInfo() {
+	var weaponName string
+	if g.myPlayer.Weapon == nil {
+		weaponName = "У вас нет оружия"
+	} else {
+		weaponName = g.myPlayer.Weapon.Name
+	}
 	output := fmt.Sprintf(`
         +----------------------------+
         | Имя: %s
@@ -41,7 +47,7 @@ func (g *Game) GetPlayerInfo() {
         | Дамаг: %d
         | Оружие: %s
         +----------------------------+
-    `, g.myPlayer.Name, g.myPlayer.Health, g.myPlayer.Damage, g.myPlayer.Weapon.Name)
+    `, g.myPlayer.Name, g.myPlayer.Health, g.myPlayer.Damage, weaponName)
 
 	fmt.Println(output)
 }
@@ -62,6 +68,10 @@ func (g *Game) GoToLocation(locationName string) {
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		return
+	}
+	if g.myPlayer.CurrentLocation.Npc != nil {
+		fmt.Printf("Вы встретили *%s*\n", g.myPlayer.CurrentLocation.Npc.Name)
+		g.myPlayer.CurrentLocation.Npc.Talk()
 	}
 }
 
@@ -85,4 +95,18 @@ func (g *Game) UseItem(itemName string) {
 	}
 
 	item.Use("", g.myPlayer)
+}
+func (g *Game) Atack(montserName string) {
+	monster := g.myPlayer.CurrentLocation.Monster
+	if monster.Name != montserName {
+		fmt.Println(colors.GetRedText("Монстра с таким именнем в данной локации нет"))
+		return
+	}
+
+	g.myPlayer.Attack(monster)
+	if monster.Health <= 0 {
+		fmt.Printf("Поздравляю, вы убили %s\n", monster.Name)
+		g.myPlayer.CurrentLocation.Monster = nil
+		return
+	}
 }

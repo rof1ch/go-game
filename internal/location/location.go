@@ -14,8 +14,9 @@ type Location struct {
 	IsOpen      bool                 `json:"is_open"`
 	Zones       map[string]*Location `json:"zones"`
 	Locations   map[string]*Location `json:"-"`
-	Monster     npc.Monster
+	Monster     *npc.Monster
 	Items       map[string]item.Item `json:"items"`
+	Npc         *npc.Npc             `json:"npc"`
 }
 
 func (l *Location) UnmarshalJSON(data []byte) error {
@@ -25,8 +26,9 @@ func (l *Location) UnmarshalJSON(data []byte) error {
 		IsOpen      bool        `json:"is_open"`
 		Zones       []*Location `json:"zones"`
 		Locations   []*Location `json:"-"`
-		Monster     npc.Monster
+		Monster     *npc.Monster
 		Items       json.RawMessage `json:"items"` // Используем RawMessage для отложенной десериализации
+		Npc         *npc.Npc        `json:"npc"`
 	}
 
 	if err := json.Unmarshal(data, &temp); err != nil {
@@ -44,6 +46,7 @@ func (l *Location) UnmarshalJSON(data []byte) error {
 		l.Locations[location.Name] = location
 	}
 	l.Monster = temp.Monster
+	l.Npc = temp.Npc
 
 	// Если items пуст, сразу назначаем пустой слайс
 	if len(temp.Items) == 0 {
@@ -73,6 +76,7 @@ func (l *Location) UnmarshalJSON(data []byte) error {
 	}
 
 	l.Items = items
+
 	return nil
 }
 
@@ -88,10 +92,11 @@ func NewLocation(name, description string, isOpen bool, zones map[string]*Locati
 
 func (l *Location) GetLocationDraw() string {
 	// Формируем строки
-	zones := fmt.Sprintf("| Зоны: %-*s|", 30, l.getZonesName())           // 30 - максимальная длина
-	locations := fmt.Sprintf("| Локации: %-*s|", 27, l.getLocationName()) // 30 - максимальная длина
-	locationName := fmt.Sprintf("| Название: %-*s|", 26, l.Name)          // 30 - максимальная длина
-	items := fmt.Sprintf("| Предметы: %-*s|", 26, l.getLocationItems())
+	zones := fmt.Sprintf("| Зоны: %-*s|", 40, l.getZonesName())           // 30 - максимальная длина
+	locations := fmt.Sprintf("| Локации: %-*s|", 37, l.getLocationName()) // 30 - максимальная длина
+	locationName := fmt.Sprintf("| Название: %-*s|", 36, l.Name)          // 30 - максимальная длина
+	items := fmt.Sprintf("| Предметы: %-*s|", 36, l.getLocationItems())
+	montsters := fmt.Sprintf("| Монстры: %-*s|", 37, l.getMonsterInfo())
 
 	// Находим максимальную длину для рамки
 	maxLength := len([]rune(locationName)) // Одна из строк имеет длину 30
@@ -105,6 +110,7 @@ func (l *Location) GetLocationDraw() string {
 	result += zones + "\n"
 	result += locations + "\n"
 	result += items + "\n"
+	result += montsters + "\n"
 	result += horizontalLine
 
 	return result
@@ -135,4 +141,12 @@ func (l *Location) getLocationItems() string {
 	}
 
 	return strings.Join(items, ", ")
+}
+
+func (l *Location) getMonsterInfo() string {
+	if l.Monster == nil {
+		return "В данной локации нет монстров"
+	}
+
+	return fmt.Sprintf("Имя: %s; Здоровье: %d; Урон: %d", l.Monster.Name, l.Monster.Health, l.Monster.Damage)
 }

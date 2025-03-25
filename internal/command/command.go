@@ -37,11 +37,10 @@ func (c *Command) RunCommand(command string) bool {
         +----------------------------------------------------------------+` + Reset + `
         | ` + getCommand("help") + getText("Вызов этого меню") + `                                        |
         | ` + getCommand("quit / exit") + getText("Закрыть меню") + `                                     |
-        | ` + getCommand("go") + getText("Перейти в какую-либо локацию") + ` |
-        | ` + getCommand("atack") + getText("Атаковать монстра ") + `                  |
-        | ` + getCommand("take") + getText("Подобрать предмет") + `                   |
+        | ` + getCommand("go") + getText("Перейти в какую-либо локацию") + `                              |
+        | ` + getCommand("atack") + getText("Атаковать монстра ") + `                                     |
+        | ` + getCommand("take") + getText("Подобрать предмет") + `                                       |
         | ` + getCommand("inventory") + getText("Открыть инвентарь") + `                                  |
-        | ` + getCommand("talk <Название NPC>") + getText("Поговорить с NPC") + `                         |
         | ` + getCommand("location") + getText("Выведет информацию о текущей локации") + `                |
         | ` + getCommand("me") + getText("Выведет информацию о игроке") + `                               |
         ` + Magenta + `+----------------------------------------------------------------+` + Reset + `
@@ -73,6 +72,11 @@ func (c *Command) RunCommand(command string) bool {
 		fmt.Printf(colors.GetCyanText("Введите название предмета: "))
 		itemName, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		c.game.UseItem(itemName)
+    case "atack":
+        var monsterName string
+        fmt.Print(colors.GetCyanText("Введите название монстра: "))
+        fmt.Scan(&monsterName)
+        c.game.Atack(monsterName)
 	default:
 		fmt.Println(colors.GetRedText("Комманда неизвестна"))
 	}
