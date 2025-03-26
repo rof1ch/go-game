@@ -72,11 +72,14 @@ func (c *Command) RunCommand(command string) bool {
 		fmt.Printf(colors.GetCyanText("Введите название предмета: "))
 		itemName, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		c.game.UseItem(itemName)
-    case "atack":
-        var monsterName string
-        fmt.Print(colors.GetCyanText("Введите название монстра: "))
-        fmt.Scan(&monsterName)
-        c.game.Atack(monsterName)
+	case "atack":
+		var monsterName string
+		fmt.Print(colors.GetCyanText("Введите название монстра: "))
+		fmt.Scan(&monsterName)
+		if err := c.game.Atack(monsterName); err != nil {
+			fmt.Println(colors.GetRedText(err.Error()))
+			return true
+		}
 	default:
 		fmt.Println(colors.GetRedText("Комманда неизвестна"))
 	}

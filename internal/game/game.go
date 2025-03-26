@@ -96,17 +96,23 @@ func (g *Game) UseItem(itemName string) {
 
 	item.Use("", g.myPlayer)
 }
-func (g *Game) Atack(montserName string) {
+func (g *Game) Atack(montserName string) error {
 	monster := g.myPlayer.CurrentLocation.Monster
 	if monster.Name != montserName {
 		fmt.Println(colors.GetRedText("Монстра с таким именнем в данной локации нет"))
-		return
+		return nil
 	}
 
+	if g.myPlayer.Health <= 0 {
+		
+		return fmt.Errorf("К сожалению вы умерли, игра закончена")
+	}
 	g.myPlayer.Attack(monster)
 	if monster.Health <= 0 {
 		fmt.Printf("Поздравляю, вы убили %s\n", monster.Name)
 		g.myPlayer.CurrentLocation.Monster = nil
-		return
+		return nil
 	}
+
+	return nil
 }
